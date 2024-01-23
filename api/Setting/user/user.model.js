@@ -14,6 +14,14 @@ const userSchema = Schema({
   password: { type: String, minLength: [6, "Password should have more than 6 character"], required: [true, "please enter password"], trim: true, },
   active: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
+  del_status: {
+    type: String,
+    enum: {
+      values: ["Live", "Deleted"],
+      message: "Value is not matched",
+    },
+    default: "Live",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

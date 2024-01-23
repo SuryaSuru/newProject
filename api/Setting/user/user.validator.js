@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const validator = require('validator'); // Import validator module
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -7,14 +6,30 @@ const userSchema = Joi.object({
   email_address: Joi.string().email().required(),
   password: Joi.string().required(),
   active: Joi.boolean().default(true),
-  createdAt: Joi.date()
+  createdAt: Joi.date(),
+  del_status: Joi.string().valid('Live', 'Deleted').default('Live')
 });
 
 // Validate the user data
 function validateUser(userData) {
-  return userSchema.validate(userData);
+  const { error, value } = userSchema.validate(userData);
+  if (error) {
+    const errorMessage = error.details.map((detail) => detail.message).join(", ");
+    throw new Error(errorMessage);
+  }
+  return value;
+}
+
+// Validate the update data
+function validateUpdate(updateData) {
+  const { error, value } = userSchema.validate(updateData);
+  if (error) {const errorMessage = error.details.map((detail) => detail.message).join(", ");
+    throw new Error(errorMessage);
+  }
+  return value;
 }
 
 module.exports = {
-  validateUser
+  validateUser,
+  validateUpdate
 };

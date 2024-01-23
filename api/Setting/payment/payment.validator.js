@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 // Define the validation schema
-const purchaseSchema = Joi.object({
+const paymentSchema = Joi.object({
   reference_no: Joi.string().max(50).allow(null),
   supplier_id: Joi.number().integer().allow(null),
   date: Joi.string().required(),
@@ -36,8 +36,8 @@ const updateSchema = Joi.object({
 });
 
 // Validate the area data
-function validatePurchase(purchaseData) {
-  return purchaseSchema.validate(purchaseData);
+function validatepayment(paymentData) {
+  return paymentSchema.validate(paymentData);
 }
 
 // Validate the update data
@@ -46,6 +46,6 @@ function validateUpdate(updateData) {
 }
 
 module.exports = {
-  validatePurchase,
+  validatepayment,
   validateUpdate,
 };
