@@ -1,8 +1,7 @@
 const UserModel = require("./user.model");
-const { validateUser,validateUpdate } = require("./user.validator");
-// const { userModel } = require("./user.model");
-// const mongoose = require("mongoose");
+const { validateUser, validateUpdate } = require("./user.validator");
 
+// Insert New User
 exports.userInsert = async (req, res, next) => {
   try {
     // Validation
@@ -13,9 +12,11 @@ exports.userInsert = async (req, res, next) => {
       return res.status(400).send(error.details[0].message);
     }
 
+    // Insert User
     let userModel = new UserModel(value);
     let savedData = await userModel.save();
 
+    // Send Response
     res.status(200).json({ message: 'Data inserted', data: savedData });
   } catch (error) {
     console.error(error);
@@ -58,23 +59,62 @@ exports.showUser = async (req, res, next) => {
 };
 
 // Update User
+// exports.updateUser = async (req, res, next) => {
+//   try {
+//     const userId = req.params.id;
+//     console.log("--",userId);
+//     const userData = req.body;
+//     console.log("--Hello",userData);
+    
+//     // Get the existing user by ID using Mongoose
+//     // const existingUser = await UserModel.findOneAndUpdate(userId);
+//     const existingUser = await UserModel.findByIdAndUpdate(userId);
+//     console.log("--existing",existingUser);
+    
+//     if (!existingUser) {
+//       return res.status(404).json({ message: 'User not found', });
+//     }
+    
+//     // Object.assign(existingUser, userData);
+//     const updatedUser = await existingUser.save();
+//     console.log("--Update",updatedUser);
+    
+//     // Send the updated user as JSON response
+//     res.status(200).json({  message: 'success', user: updatedUser });
+//   } catch (error) {
+//     // Send Error Response
+//     res
+//       .status(500)
+//       .json({ message: "Something went wrong", error: error.message });
+//   }
+// };
 exports.updateUser = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
-    const userData = req.body;
+    const id = req.params.id;
 
+    // Validation
+    const { error, value } = validateUpdate(req.body);
+
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+    
     // Get the existing user by ID using Mongoose
-    const existingUser = await UserModel.findOneAndUpdate(userId);
-
+    const existingUser = await UserModel.findByIdAndUpdate(
+      { _id: id },
+      value,
+      { new: true }
+    );
+    
     if (!existingUser) {
       return res.status(404).json({ message: 'User not found', });
     }
     
-    Object.assign(existingUser, userData);
-    const updatedUser = await existingUser.save();
+    // Object.assign(existingUser, userData);
+    // const updatedUser = await existingUser.save();
     
     // Send the updated user as JSON response
-    res.status(200).json({  message: 'success', user: updatedUser });
+    res.status(200).json({  message: 'success', user: existingUser });
   } catch (error) {
     // Send Error Response
     res

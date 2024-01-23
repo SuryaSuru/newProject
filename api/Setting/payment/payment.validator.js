@@ -2,50 +2,42 @@ const Joi = require("joi");
 
 // Define the validation schema
 const paymentSchema = Joi.object({
-  reference_no: Joi.string().max(50).allow(null),
-  supplier_id: Joi.number().integer().allow(null),
-  date: Joi.string().required(),
-  subtotal: Joi.number().allow(null),
-  other: Joi.number().allow(null),
-  grand_total: Joi.number().allow(null),
-  paid: Joi.number().allow(null),
-  due: Joi.number().allow(null),
-  note: Joi.string().max(200).allow(null),
-  user_id: Joi.number().integer().allow(null),
-  outlet_id: Joi.number().integer().allow(null),
-  added_date_time: Joi.date().required().default(Date.now),
-  payment_id: Joi.number().integer().required().default(0),
-  del_status: Joi.string().max(50).default("Active"),
+  userId: Joi.string().required(), // Assuming userId is a string, adjust if needed
+  paymentMode: Joi.string().valid('Cash', 'CreditCard', 'DebitCard', 'Other').default('Cash'),
+  amountPaid: Joi.string().required(),
+  active: Joi.boolean().default(true),
+  createdAt: Joi.date().default(Date.now),
+  del_status: Joi.string().valid('Live', 'Deleted').default('Live')
 });
 
-const updateSchema = Joi.object({
-  reference_no: Joi.string().max(50).allow(null),
-  supplier_id: Joi.number().integer().allow(null),
-  date: Joi.string().required(),
-  subtotal: Joi.number().allow(null),
-  other: Joi.number().allow(null),
-  grand_total: Joi.number().allow(null),
-  paid: Joi.number().allow(null),
-  due: Joi.number().allow(null),
-  note: Joi.string().max(200).allow(null),
-  user_id: Joi.number().integer().allow(null),
-  outlet_id: Joi.number().integer().allow(null),
-  added_date_time: Joi.date().required().default(Date.now),
-  payment_id: Joi.number().integer().required().default(0),
-  del_status: Joi.string().max(50).default("Active"),
-});
-
-// Validate the area data
-function validatepayment(paymentData) {
+// Validate the payment data
+function validatePayment(paymentData) {
   return paymentSchema.validate(paymentData);
 }
 
-// Validate the update data
 function validateUpdate(updateData) {
-  return updateSchema.validate(updateData);
+  return paymentSchema.validate(updateData);
 }
 
+// function validatePayment(paymentData) {
+//   const { error, value } = paymentSchema.validate(paymentData);
+//   if (error) {
+//     const errorMessage = error.details.map((detail) => detail.message).join(", ");
+//     throw new Error(errorMessage);
+//   }
+//   return value;
+// }
+
+// // Validate the update data
+// function validateUpdate(updateData) {
+//   const { error, value } = paymentSchema.validate(updateData);
+//   if (error) {const errorMessage = error.details.map((detail) => detail.message).join(", ");
+//     throw new Error(errorMessage);
+//   }
+//   return value;
+// }
+
 module.exports = {
-  validatepayment,
+  validatePayment,
   validateUpdate,
 };

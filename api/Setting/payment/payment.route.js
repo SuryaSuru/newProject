@@ -1,35 +1,20 @@
-let express = require('express');
-let router = express.Router();
+const express = require('express');
+const router = express.Router();
+const paymentController = require('./payment.controller');
 
-let paymentController = require('./payment.controller');
+// add payment
+router.post('/', paymentController.insertPayment);
 
-const {
-  authorization,
-  isLoggedIn
-} = require("../../../middleware/userAuth");
-const {
-  Permissions
-} = require("../user/permissions");
+// all payments
+router.get('/', paymentController.ListPayments);
 
-// authorization(Permissions.permissions.payment.create),
-// authorization(Permissions.permissions.payment.view),
-// authorization(Permissions.permissions.payment.update),
-// authorization(Permissions.permissions.payment.delete),
+/* show */
+router.get('/:id', paymentController.showPayment);
 
-/* Insert */
-router.post('/new', paymentController.insertpayment);
-  
-// /* show */
-router.get('/list/',paymentController.showpayments);
+/* update */
+router.put('/:id', paymentController.updatePayment);
 
-// /* show */
-router.get('/show/:id', paymentController.showpayment );
-
-// // /* update */
- router.post('/update/:id',paymentController.updatepayment );
-
-// // /* update */
-  router.delete('/delete/:id', paymentController.deletepayment);
-
+/* Delete */
+router.delete('/:id', paymentController.deletePayment);
 
 module.exports = router;

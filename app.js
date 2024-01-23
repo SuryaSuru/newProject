@@ -9,6 +9,7 @@ dotenv.config();
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./api/Setting/user/user.route");
+const paymentRouter = require("./api/Setting/payment/payment.route");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/payment", paymentRouter);
 
 mongoose.set("strictQuery", false);
 
