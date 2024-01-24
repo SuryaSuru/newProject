@@ -1,10 +1,13 @@
 const Joi = require('joi');
 
 const userSchema = Joi.object({
-  username: Joi.string().required(),
-  contactNumber: Joi.number().required(),
+  company_id: Joi.string().required(), // Assuming company_id is a mongoose ObjectId string
+  username: Joi.string().max(50).min(5).required().trim(),
+  contactNumber: Joi.number().integer().min(1000000000).max(9999999999).required(),
   email_address: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().min(6).required().trim(),
+  active: Joi.boolean().default(true),
+  del_status: Joi.string().valid('Live', 'Deleted').default('Live')
 });
 
 // Validate the area data

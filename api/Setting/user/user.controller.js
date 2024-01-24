@@ -1,7 +1,58 @@
 const UserModel = require("./user.model");
+const CompanyModel  = require("../company/company.model");
 const { validateUser, validateUpdate } = require("./user.validator");
+const bcrypt = require('bcrypt');
 
 // Insert New User
+// exports.userInsert = async (req, res, next) => {
+//   try {
+//     // Validation
+//     let { error, value } = validateUser(req.body);
+
+//     // Check Error in Validation
+//     if (error) {
+//       return res.status(400).send(error.details[0].message);
+//     }
+
+//     // Insert User
+//     let userModel = new UserModel(value);
+//     let savedData = await userModel.save();
+
+//     // Send Response
+//     res.status(200).json({ message: 'Data inserted', data: savedData });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error inserting data into the database' });
+//   }
+// };
+// exports.userInsert = async (req, res, next) => {
+//   try {
+//     // Validation
+//     let { error, value } = validateUser(req.body);
+
+//     // Check Error in Validation
+//     if (error) {
+//       return res.status(400).send(error.details[0].message);
+//     }
+
+//     // Hash the Password
+//     const saltRounds = 10; // Adjust the number of salt rounds as needed
+//     const hashedPassword = await bcrypt.hash(value.password, saltRounds);
+
+//     // Replace the plain password with the hashed one
+//     value.password = hashedPassword;
+
+//     // Insert User
+//     let userModel = new UserModel(value);
+//     let savedData = await userModel.save();
+
+//     // Send Response
+//     res.status(200).json({ message: 'Data inserted', data: savedData });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error inserting data into the database' });
+//   }
+// };
 exports.userInsert = async (req, res, next) => {
   try {
     // Validation
@@ -9,18 +60,31 @@ exports.userInsert = async (req, res, next) => {
 
     // Check Error in Validation
     if (error) {
-      return res.status(400).send(error.details[0].message);
+      return res.status(400).json({ error: error.details[0].message });
     }
+
+    // Hash the Password
+    const saltRounds = 10; // Adjust the number of salt rounds as needed
+    const hashedPassword = await bcrypt.hash(value.password, saltRounds);
+
+    // Replace the plain password with the hashed one
+    value.password = hashedPassword;
 
     // Insert User
     let userModel = new UserModel(value);
-    let savedData = await userModel.save();
+    let savedUser = await userModel.save();
+
+    // Update company with user_id
+    const companyId = req.body.company_id; // Assuming you pass company_id in the request body
+    if (companyId) {
+      await CompanyModel.findByIdAndUpdate(companyId, { $push: { user_id: savedUser._id } });
+    }
 
     // Send Response
-    res.status(200).json({ message: 'Data inserted', data: savedData });
+    res.status(200).json({ message: 'User data inserted', data: savedUser });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error inserting data into the database' });
+    res.status(500).json({ error: 'Error inserting user data into the database' });
   }
 };
 
