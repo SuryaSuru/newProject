@@ -1,6 +1,7 @@
 const ItemsModel = require('./items.model');
 const { validateItems, validateUpdate } = require('./items.validator');
 const CompanyModel  = require("../company/company.model");
+const ItemCategoriesModel  = require("../itemsCategories/itemsCategories.model");
 
 // Insert New items
 exports.insertItems = async (req, res, next) => {
@@ -27,6 +28,12 @@ exports.insertItems = async (req, res, next) => {
     const companyId = req.body.company_id; // Assuming you pass company_id in the request body
     if (companyId) {
       await CompanyModel.findByIdAndUpdate(companyId, { $push: { item_id: savedItems._id } });
+    }
+
+    // Update itemCategories with item_id
+    const itemCategoriesId = req.body.itemCategories_id; // Assuming you pass itemCategories_id in the request body
+    if (itemCategoriesId) {
+      await ItemCategoriesModel.findByIdAndUpdate(itemCategoriesId, { $push: { item_id: savedItems._id } });
     }
 
     // Send Response
