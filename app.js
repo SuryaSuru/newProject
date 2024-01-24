@@ -13,6 +13,7 @@ const paymentRouter = require("./api/Setting/payment/payment.route");
 const companyRouter = require("./api/Setting/company/company.route");
 const itemsCategoriesRouter = require("./api/Setting/itemsCategories/itemsCategories.route");
 const itemsRouter = require("./api/Setting/items/items.route");
+const userSupport = require("./api/Setting/support/support.route");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/payment", paymentRouter);
 app.use("/company", companyRouter);
 app.use("/itemsCategories", itemsCategoriesRouter);
 app.use("/items", itemsRouter);
+app.use("/support",userSupport);
 
 mongoose.set("strictQuery", false);
 
