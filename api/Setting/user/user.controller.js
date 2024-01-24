@@ -63,6 +63,12 @@ exports.userInsert = async (req, res, next) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
+    // Check if Email already exists
+    const existingEmail = await UserModel.findOne({ email_address: value.email_address });
+    if (existingEmail) {
+      return res.status(400).json({ error: 'Email with the given name already exists' });
+    }
+
     // Hash the Password
     const saltRounds = 10; // Adjust the number of salt rounds as needed
     const hashedPassword = await bcrypt.hash(value.password, saltRounds);

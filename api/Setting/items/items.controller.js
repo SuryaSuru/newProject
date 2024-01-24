@@ -12,6 +12,12 @@ exports.insertItems = async (req, res, next) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
+
+    // Check if ItemName already exists
+    const existingItemName = await UserModel.findOne({ itemName: value.itemName });
+    if (existingItemName) {
+      return res.status(400).json({ error: 'Item with the given name already exists' });
+    }
     
     // Insert items
     let itemsModel = new ItemsModel(value);

@@ -32,6 +32,12 @@ exports.insertCompany = async (req, res, next) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
+
+    // Check if CompanyName already exists
+    const existingCompanyName = await UserModel.findOne({ companyName: value.companyName });
+    if (existingCompanyName) {
+      return res.status(400).json({ error: 'Company with the given name already exists' });
+    }
     
     // Insert company
     let companyModel = new CompanyModel(value);
