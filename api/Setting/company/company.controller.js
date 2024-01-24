@@ -48,7 +48,7 @@ exports.insertCompany = async (req, res, next) => {
 // Display List
 exports.ListCompanys = async (req, res, next) => {
   try {
-    let company = await CompanyModel.find();
+    let company = await CompanyModel.find({ del_status: "Live" });
     if (!company || company.length === 0) {
       console.log('companyr not found');
       return res.status(404).json({ message: 'company not found' });

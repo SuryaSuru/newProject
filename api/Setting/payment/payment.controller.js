@@ -50,7 +50,7 @@ exports.insertPayment = async (req, res, next) => {
 // Display List
 exports.ListPayments = async (req, res, next) => {
   try {
-    let payment = await PaymentModel.find();
+    let payment = await PaymentModel.find({ del_status: "Live" });
     if (!payment || payment.length === 0) {
       console.log('paymentr not found');
       return res.status(404).json({ message: 'payment not found' });

@@ -1,25 +1,29 @@
 const Joi = require("joi");
 
 // Define the validation schema
-const companySchema = Joi.object({
-  companyName: Joi.string().max(50).min(5).required().trim(),
-  contactNumber: Joi.number().integer().min(1000000000).max(9999999999).required(),
-  email_address: Joi.string().email().required(),
-  active: Joi.boolean().default(true),
-  del_status: Joi.string().valid('Live', 'Deleted').default('Live'),
-  user_id: Joi.array().items(Joi.string().required())
+const itemsSchema = Joi.object({
+  company_id: Joi.string().required().label("Company ID"),
+  itemName: Joi.string().trim().required().label("Item Name"),
+  description: Joi.string().trim().required().label("Description"),
+  price: Joi.number().min(0).required().label("Price"),
+  quantityInStock: Joi.number().min(0).required().label("Quantity in Stock"),
+  isAvailable: Joi.boolean().default(true).label("Is Available"),
+  createdAt: Joi.date().label("Created At"),
+  updatedAt: Joi.date().allow(null).label("Updated At"),
+  itemsCategories_id: Joi.string().required(),
+  del_status: Joi.string().valid("Live", "Deleted").default("Live").label("Delete Status"),
 });
 
-// Validate the company data
-function validateCompany(companyData) {
-  return companySchema.validate(companyData);
+// Validate the items data
+function validateItems(itemsData) {
+  return itemsSchema.validate(itemsData);
 }
 
 function validateUpdate(updateData) {
-  return companySchema.validate(updateData);
+  return itemsSchema.validate(updateData);
 }
 
 module.exports = {
-  validateCompany,
+  validateItems,
   validateUpdate,
 };

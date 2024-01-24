@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const companyController = require('./company.controller');
+const itemsController = require('./items.controller');
 
-// add company
-router.post('/', companyController.insertCompany);
+// add items
+router.post('/', itemsController.insertItems);
 
-// all companys
-router.get('/', companyController.ListCompanys);
+// all itemss
+router.get('/', itemsController.ListItemss);
 
 /* show */
-router.get('/:id', companyController.showCompany);
+router.get('/:id', itemsController.showItems);
 
 /* update */
-router.put('/:id', companyController.updateCompany);
+router.put('/:id', itemsController.updateItems);
 
 /* Delete */
-router.delete('/:id', companyController.deleteCompany);
+router.delete('/:id', itemsController.deleteItems);
 
 module.exports = router;

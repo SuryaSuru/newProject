@@ -10,7 +10,8 @@ const companySchema = Schema({
   active: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   del_status: { type: String, enum: { values: ["Live", "Deleted"], message: "Value is not matched" },  default: "Live" },
-  user_id:[ { type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+  user_id:[ { type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  item_id:[ { type: mongoose.Schema.Types.ObjectId, ref: "Items" }]
 });
 
 module.exports = mongoose.model("Company", companySchema);
